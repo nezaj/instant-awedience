@@ -28,7 +28,11 @@ function Main() {
             Watch movies, TV shows, and more with friends and family. Create a room and invite others to watch together. It's free and easy to use.
           </p>
           <div className="flex items-center mt-8 gap-6">
-            <button className="appearance-none border-0 font-bold rounded-md cursor-pointer px-3.5 py-2.5 text-sm bg-violet-500 hover:bg-violet-400 text-white shadow-sm">Get Started</button>
+            <button className="appearance-none border-0 font-bold rounded-md cursor-pointer px-3.5 py-2.5 text-sm bg-violet-500 hover:bg-violet-400 text-white shadow-sm"
+              onClick={() => { window.location.href = "/dashboard" }}
+            >
+              Get Started
+            </button>
           </div>
         </div>
       </div>
