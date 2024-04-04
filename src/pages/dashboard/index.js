@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { init, useAuth } from "@instantdb/react"
 
 const db = init({ appId: "d7e379b9-9744-4ba1-a7d4-4b022080338d" })
@@ -28,6 +29,43 @@ function Background() {
 
 // Auth components
 // ----------------------
+function GoogleAuth() {
+  const [error, setError] = useState(null);
+  const [nonce] = useState(crypto.randomUUID());
+  return (
+    <GoogleOAuthProvider
+      clientId="416673654793-s0grgnmg2s86h1re3ipaumqq64kloq7o.apps.googleusercontent.com"
+      nonce={nonce}
+    >
+      <GoogleLogin
+        nonce={nonce}
+        onSuccess={(credentialResponse) => {
+          const idToken = credentialResponse.credential;
+          if (!idToken) {
+            setError("Missing id_token.");
+            return;
+          }
+          auth
+            .signInWithIdToken({
+              clientName: "instant-awedience",
+              idToken,
+              nonce,
+            })
+            .catch((err) => {
+              console.log(err.body);
+              alert("Uh oh: " + err.body?.message);
+            });
+        }}
+        onError={() => {
+          setError("Login failed.");
+        }}
+        type="standard"
+      />
+      {error}
+    </GoogleOAuthProvider>
+  )
+}
+
 function Login() {
   const [sentEmail, setSentEmail] = useState('')
   return (
@@ -43,7 +81,12 @@ function Login() {
 
 function Email({ setSentEmail }) {
   const [email, setEmail] = useState('')
-
+  const url = db.auth.createAuthorizationURL({
+    // The name of the client you chose when you created it on the
+    // Instant dashboard
+    clientName: 'instant-awedience',
+    redirectURL: window.location.href,
+  })
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!email) return
@@ -66,6 +109,8 @@ function Email({ setSentEmail }) {
           placeholder="example@email.com" />
         <AuthButton label="Send link" />
       </div>
+      <a href={url}>Log in with Google</a>
+      <GoogleAuth />
       <Background />
     </form >
   );
