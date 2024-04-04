@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.18",
-    "@instantdb/react": "^0.9.4",
+    "@instantdb/react": "^0.9.5",
     "@react-oauth/google": "^0.12.1",
     "next": "14.1.4",
     "react": "^18",
