@@ -14,7 +14,7 @@ const authSubheaderStyle = "text-black text-base leading-relaxed mt-2";
 // ----------------------
 function AuthButton({ label }) {
   return (
-    <button className="appearance-none border-0 font-bold rounded-md cursor-pointer px-3.5 py-2.5 text-sm bg-violet-500 hover:bg-violet-400 text-white shadow-sm mt-4">
+    <button className="appearance-none border-0 font-bold rounded-md cursor-pointer px-3.5 py-2.5 text-sm bg-violet-500 hover:bg-violet-400 text-white shadow-sm mt-4 w-full">
       {label}
     </button>
   )
@@ -27,6 +27,16 @@ function Background() {
 
 }
 
+function Divider() {
+  return (
+    <div className="flex items-center gap-2">
+      <div className="bg-slate-400 flex-1 h-px" />
+      <span className="text-sm text-neutral-500">or</span>
+      <div className="bg-slate-400 flex-1 h-px" />
+    </div>
+  );
+}
+
 // Auth components
 // ----------------------
 function GoogleAuth() {
@@ -37,31 +47,31 @@ function GoogleAuth() {
       clientId="416673654793-s0grgnmg2s86h1re3ipaumqq64kloq7o.apps.googleusercontent.com"
       nonce={nonce}
     >
-      <GoogleLogin
-        nonce={nonce}
-        onSuccess={(credentialResponse) => {
-          const idToken = credentialResponse.credential;
-          if (!idToken) {
-            setError("Missing id_token.");
-            return;
-          }
-          auth
-            .signInWithIdToken({
+      <div className="flex justify-center items-center mt-4">
+        <GoogleLogin
+          nonce={nonce}
+          onSuccess={(credentialResponse) => {
+            const idToken = credentialResponse.credential;
+            if (!idToken) {
+              setError("Missing id_token.");
+              return;
+            }
+            db.auth.signInWithIdToken({
               clientName: "instant-awedience",
               idToken,
               nonce,
-            })
-            .catch((err) => {
+            }).catch((err) => {
               console.log(err.body);
               alert("Uh oh: " + err.body?.message);
             });
-        }}
-        onError={() => {
-          setError("Login failed.");
-        }}
-        type="standard"
-      />
-      {error}
+          }}
+          onError={() => {
+            setError("Login failed.");
+          }}
+          type="standard"
+        />
+        {error}
+      </div>
     </GoogleOAuthProvider>
   )
 }
@@ -81,12 +91,6 @@ function Login() {
 
 function Email({ setSentEmail }) {
   const [email, setEmail] = useState('')
-  const url = db.auth.createAuthorizationURL({
-    // The name of the client you chose when you created it on the
-    // Instant dashboard
-    clientName: 'instant-awedience',
-    redirectURL: window.location.href,
-  })
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!email) return
@@ -97,10 +101,10 @@ function Email({ setSentEmail }) {
     })
   }
   return (
-    <form onSubmit={handleSubmit}>
-      <div className={authContainerStyle}>
-        <h5 className={authHeaderStyle}>Sign in with Email</h5>
-        <p className={authSubheaderStyle}>We'll send you an email with a special link that you can use to sign in, no password needed!</p>
+    <div className={authContainerStyle}>
+      <h5 className={authHeaderStyle}>Sign in with Email</h5>
+      <p className={authSubheaderStyle}>We'll send you an email with a special link that you can use to sign in, no password needed!</p>
+      <form onSubmit={handleSubmit} className="mb-4">
         <input
           className={inputStyle}
           type="email"
@@ -108,11 +112,11 @@ function Email({ setSentEmail }) {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="example@email.com" />
         <AuthButton label="Send link" />
-      </div>
-      <a href={url}>Log in with Google</a>
+      </form >
+      <Divider />
       <GoogleAuth />
       <Background />
-    </form >
+    </div>
   );
 }
 function MagicCode({ sentEmail }) {
