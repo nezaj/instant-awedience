@@ -5,19 +5,16 @@ import { init, Cursors } from "@instantdb/react"
 const db = init({ appId: "d7e379b9-9744-4ba1-a7d4-4b022080338d" })
 
 function App() {
-  const roomType = "document";
-  const roomId = "the-best-document-ever";
+  const roomType = "main";
+  const roomId = "main";
   return (
-    <div>
-      <Cursors
-        db={db}
-        roomType={roomType}
-        roomId={roomId}
-        spaceId={"random"}
-      >
-        <Main />
-      </Cursors>
-    </div>
+    <Cursors
+      db={db}
+      roomType={roomType}
+      roomId={roomId}
+    >
+      <Main />
+    </Cursors>
   )
 }
 
