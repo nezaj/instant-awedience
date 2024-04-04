@@ -23,9 +23,9 @@ function Main() {
     <div className="flex flex-col h-screen">
       <div className="flex flex-col flex-1 justify-center">
         <div className="flex flex-col items-center justify-center max-w-2xl mx-auto p-5 sm:p-10">
-          <h1 className="text-black text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter text-center leading-none">Watch Together</h1>
+          <h1 className="text-black text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter text-center leading-none">Thread Together</h1>
           <p className="text-black text-lg leading-relaxed text-center mt-6 max-w-md">
-            Watch movies, TV shows, and more with friends and family. Create a room and invite others to watch together. It's free and easy to use.
+            One thread to rule them all
           </p>
           <div className="flex items-center mt-8 gap-6">
             <button className="appearance-none border-0 font-bold rounded-md cursor-pointer px-3.5 py-2.5 text-sm bg-violet-500 hover:bg-violet-400 text-white shadow-sm"
