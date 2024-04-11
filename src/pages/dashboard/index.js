@@ -4,6 +4,7 @@ import Login from "@/components/Login"
 import PartyTime from "@/components/partytime"
 
 const db = init({ appId: "d7e379b9-9744-4ba1-a7d4-4b022080338d" })
+const room = db.room("main", '123');
 
 // Helpers
 // ----------------------
@@ -23,6 +24,16 @@ function stringToColor(str) {
     color += ('00' + value.toString(16)).substr(-2);
   }
   return color;
+}
+
+function typingInfo(users) {
+  console.log("HERE", users)
+  if (users.length === 0) return null;
+  if (users.length === 1) return `${users[0].email} is typing...`;
+  if (users.length === 2)
+    return `${users[0].email} and ${users[1].email} are typing...`;
+
+  return `${users[0].email} and ${users.length - 1} others are typing...`;
 }
 
 // Mutations
@@ -82,7 +93,8 @@ function CommentThread({ user, comments }) {
     }
   };
 
-  const onKeyDown = (e) => {
+  const onKeyDown = (e, indicatorFn) => {
+    indicatorFn(e);
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e);
@@ -98,6 +110,10 @@ function CommentThread({ user, comments }) {
   const handleClear = (comments) => {
     deleteComments(comments);
   };
+
+  room.useSyncPresence(user);
+  const typing = room.useTypingIndicator('comment');
+  console.log("TYPING", typing)
 
   return (
     <div className="flex flex-col h-full p-4 gap-4">
@@ -128,12 +144,16 @@ function CommentThread({ user, comments }) {
           <form onSubmit={handleSubmit}>
             <textarea
               value={text}
+              onBlur={typing.inputProps.onBlur}
+              onKeyDown={(e) => onKeyDown(e, typing.inputProps.onKeyDown)}
               onChange={(e) => setText(e.target.value)}
-              onKeyDown={onKeyDown}
               className="box-border block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset focus:ring-indigo-600 sm:leading-6 border-none text-sm ring-0"
               placeholder="Write..."
               style={{ resize: 'none', fontFamily: 'inherit' }}
             />
+            <div className="truncate text-xs text-gray-500">
+              {typing.active.length ? typingInfo(typing.active) : <>&nbsp;</>}
+            </div>
           </form>
         </div>
         <div className="flex justify-between items-center">

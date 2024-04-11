@@ -1,16 +1,17 @@
 import { init } from '@instantdb/react';
 import { createRef, useRef } from 'react';
 
-const { usePublishTopic, useTopicEffect } = init({
+const db = init({
   appId: "d7e379b9-9744-4ba1-a7d4-4b022080338d",
 });
 
+const { usePublishTopic, useTopicEffect } = db.room('main', '123');
+
+
 export default function InstantTopics() {
-  const sendEmoji = usePublishTopic('topics-example', '1', 'emoji');
+  const sendEmoji = usePublishTopic('emoji');
 
   useTopicEffect(
-    'topics-example',
-    '1',
     'emoji',
     ({ name, directionAngle, rotationAngle }) => {
       if (!emoji[name]) return;
