@@ -75,7 +75,7 @@ function Comment({ comment }) {
     <div className="flex flex-col gap-4">
       <div className="rounded-lg flex flex-col border-black/5 border">
         <div className="flex gap-2 p-4 py-2 items-center">
-          <div className="rounded-full overflow-hidden bg-gray-100 w-6 h-6 flex-none" style={{ backgroundColor: stringToColor(creatorEmail) }} />
+          <Avatar name={creatorEmail} color={stringToColor(creatorEmail)} />
           <div className="flex flex-col justify-center flex-1 gap-0.5">
             <span className="text-black text-sm">
               <span className="text-black text-sm font-semibold inline">{creatorEmail}</span>
@@ -135,9 +135,12 @@ function CommentThread({ user, comments }) {
 
   return (
     <div className="flex flex-col h-full p-4 gap-4">
-      {Object.entries(presence.peers).map(([id, peer]) => (
-        <Avatar key={id} name={peer.email} color={peer.color} />
-      ))}
+      <div className="flex justify-end">
+        <Avatar name={user.email} color={stringToColor(user.email)} />
+        {Object.entries(presence.peers).map(([id, peer]) => (
+          <Avatar key={id} name={peer.email} color={peer.color} />
+        ))}
+      </div>
       <div
         ref={commentsRef}
         className="flex-1 overflow-y-scroll space-y-4"
@@ -151,10 +154,7 @@ function CommentThread({ user, comments }) {
       <div className="flex flex-col gap-4">
         <div className="flex-none rounded-lg flex flex-col border-black/5 border">
           <div className="flex gap-2 p-4 py-2 items-center">
-            <div
-              className="rounded-full overflow-hidden bg-gray-100 w-6 h-6 flex-none"
-              style={{ backgroundColor: stringToColor(user.email) }}
-            />
+            <Avatar name={user.email} color={stringToColor(user.email)} />
             <div className="flex flex-col justify-center flex-1 gap-0.5">
               <span className="text-black text-sm font-semibold inline">
                 Add a comment
