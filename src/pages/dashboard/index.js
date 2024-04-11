@@ -27,7 +27,6 @@ function stringToColor(str) {
 }
 
 function typingInfo(users) {
-  console.log("HERE", users)
   if (users.length === 0) return null;
   if (users.length === 1) return `${users[0].email} is typing...`;
   if (users.length === 2)
@@ -49,6 +48,25 @@ function addComment({ user, text }) {
 function deleteComments(comments) {
   const txs = comments.map((comment) => tx.comments[comment.id].delete(comment))
   db.transact(txs)
+}
+
+const avatarClassNames =
+  'group relative select-none h-10 w-10 bg-gray-50 border border-4 border-black user-select rounded-full first:ml-0 flex justify-center items-center -ml-2 first:ml-0 relative';
+function Avatar({ name, color }) {
+  return (
+    <div
+      key={'user'}
+      className={avatarClassNames}
+      style={{
+        borderColor: color,
+      }}
+    >
+      {name?.slice(0, 1)}
+      <div className="hidden group-hover:flex absolute z-10 bottom-10 text-sm text-gray-800 bg-gray-200 rounded px-2">
+        {name}
+      </div>
+    </div>
+  );
 }
 
 function Comment({ comment }) {
@@ -93,8 +111,8 @@ function CommentThread({ user, comments }) {
     }
   };
 
-  const onKeyDown = (e, indicatorFn) => {
-    indicatorFn(e);
+  const onKeyDown = (e) => {
+    typing.inputProps.onKeyDown(e);
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e);
@@ -111,12 +129,15 @@ function CommentThread({ user, comments }) {
     deleteComments(comments);
   };
 
-  room.useSyncPresence(user);
+  room.useSyncPresence({ ...user, color: stringToColor(user.email) });
+  const presence = room.usePresence();
   const typing = room.useTypingIndicator('comment');
-  console.log("TYPING", typing)
 
   return (
     <div className="flex flex-col h-full p-4 gap-4">
+      {Object.entries(presence.peers).map(([id, peer]) => (
+        <Avatar key={id} name={peer.email} color={peer.color} />
+      ))}
       <div
         ref={commentsRef}
         className="flex-1 overflow-y-scroll space-y-4"
@@ -145,7 +166,7 @@ function CommentThread({ user, comments }) {
             <textarea
               value={text}
               onBlur={typing.inputProps.onBlur}
-              onKeyDown={(e) => onKeyDown(e, typing.inputProps.onKeyDown)}
+              onKeyDown={onKeyDown}
               onChange={(e) => setText(e.target.value)}
               className="box-border block w-full rounded-md border-0 px-4 py-2 text-gray-900 shadow-sm ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset focus:ring-indigo-600 sm:leading-6 border-none text-sm ring-0"
               placeholder="Write..."
