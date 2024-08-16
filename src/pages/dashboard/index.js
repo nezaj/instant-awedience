@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
-import { init, useAuth, id, tx } from "@instantdb/react"
+import { init, id, tx } from "@instantdb/react"
 import Login from "@/components/Login"
 import PartyTime from "@/components/partytime"
 
@@ -152,7 +152,7 @@ function CommentThread({ user, comments }) {
       </div>
       <div className="bg-neutral-100 -mx-4 h-0.5" />
       <div className="flex flex-col gap-4">
-        <div className="flex-none rounded-lg flex flex-col border-black/5 border">
+        <div className="flex-none rounded-lg flex flex-col border-black/5 border border-b-0">
           <div className="flex gap-2 p-4 py-2 items-center">
             <Avatar name={user.email} color={stringToColor(user.email)} />
             <div className="flex flex-col justify-center flex-1 gap-0.5">
@@ -225,7 +225,7 @@ function Main({ user }) {
 // App
 // ----------------------
 function App() {
-  const { isLoading, user, error } = useAuth(db)
+  const { isLoading, user, error } = db.useAuth()
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error: {error.message}</div>
   if (user) return <Main user={user} />
