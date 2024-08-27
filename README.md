@@ -1,6 +1,7 @@
 ## Instant Awedience
-
 This is a simple chat app made with [InstantDB](https://instantdb.com)
+
+https://github.com/user-attachments/assets/3a332149-ea92-4f50-8815-0a2932d39943
 
 You can see the app [live
 here](instant-awedience.vercel.app)
