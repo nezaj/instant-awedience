@@ -71,6 +71,11 @@ function Avatar({ name, color }) {
 
 function Comment({ comment }) {
   const { creatorEmail, text } = comment
+
+  // This is a simple check to avoid rendering empty comments
+  // Soon Instant will have required fields and validation to prevent this
+  if (!creatorEmail || !text) { return }
+
   return (
     <div className="flex flex-col gap-4">
       <div className="rounded-lg flex flex-col border-black/5 border">
